@@ -49,14 +49,10 @@ contract fidelityPoints is Token {
 
     // Propriétaire de la proposition
     address public owner;
-
-    // Array with all balances
     mapping (address => uint256) public balanceF;
 
     // Points de fidélités initiaux
     uint256 public initialPoints;
-    
-
     
     function balanceOf(address _owner) constant returns (uint256 balance){
         balanceF[_owner]=initialPoints;
@@ -74,7 +70,9 @@ contract fidelityPoints is Token {
     function setInitialPoint(uint newPoints) ownerOnly() {
         initialPoints = newPoints;
     }
-
+    // Avertis le client d'un transfert de points
+    event Results(address from, bytes32 msg);
+    // Constructeur
     /* Initializes contract with initial supply fidelity points to the owner of the contract */
     function fidelityPoints(uint initialSupply) {
         owner=msg.sender;
@@ -84,12 +82,13 @@ contract fidelityPoints is Token {
     }
     /* Transfer of fidelity points */
 
-    function transfer(address _to, uint256 _value) returns (bool success) {
+    function transfer(address _to, uint256 _value) ownerOnly returns (bool success) {
         success=false;
         if (balanceOf(msg.sender) < _value) throw;
         if (balanceOf(_to) + _value < balanceOf(_to)) throw;
         balanceF[msg.sender] -= _value;                     
         balanceF[_to] += _value;
+        Results(msg.sender,"Points transférés");
         success=true;
     }
 
