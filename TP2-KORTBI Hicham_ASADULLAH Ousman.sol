@@ -49,6 +49,8 @@ contract fidelityPoints is Token {
 
     // Propriétaire de la proposition
     address public owner;
+
+    // Array with all balances
     mapping (address => uint256) public balanceF;
 
     // Points de fidélités initiaux
